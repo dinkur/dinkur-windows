@@ -1,0 +1,41 @@
+// Dinkur the task time tracking utility.
+// <https://github.com/dinkur/dinkur>
+//
+// Copyright (C) 2021 Kalle Fagerberg
+// SPDX-FileCopyrightText: 2021 Kalle Fagerberg
+// SPDX-License-Identifier: GPL-3.0-or-later
+//
+// This program is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by the
+// Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+// FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+// more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+syntax = "proto3";
+
+package dinkurapi.v1;
+
+option go_package = "github.com/dinkur/dinkur/api/dinkurapi/v1";
+option csharp_namespace = "Dinkur.Api";
+
+// Event is an enumeration of different change states for a given object.
+enum Event {
+  // EVENT_UNSPECIFIED means the event is not properly initialized, and is
+  // considered undefined behavior. Consumers should throw errors on this value
+  // instead of trying to interpret it.
+  EVENT_UNSPECIFIED = 0;
+  // EVENT_CREATED means the object was just created.
+  EVENT_CREATED = 1;
+  // EVENT_CREATED means the object that previosuly existed and some field of
+  // it has been changed.
+  EVENT_UPDATED = 2;
+  // EVENT_DELETED means the object has been removed.
+  EVENT_DELETED = 3;
+}
