@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Dinkur (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Dinkur (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
