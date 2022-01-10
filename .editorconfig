@@ -1,0 +1,10 @@
+root = true
+
+[*.cs]
+indent_style = space
+
+#prefer accessibility modifiers to be declared except for public interface members. This will currently not differ from always and will act as future proofing for if C# adds default interface methods.
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+
+[*.{cs,vb}]
+dotnet_style_operator_placement_when_wrapping=beginning_of_line
