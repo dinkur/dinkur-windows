@@ -7,7 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                Padding="20">
         <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+        <AutoSuggestBox PlaceholderText="Hello world" QueryIcon="Filter" Width="200"
+                        TextChanged="AutoSuggestBox_TextChanged"
+                        SuggestionChosen="AutoSuggestBox_SuggestionChosen"></AutoSuggestBox>
     </StackPanel>
 </Window>
