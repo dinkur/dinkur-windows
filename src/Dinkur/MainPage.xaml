@@ -6,13 +6,40 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-    Padding="20">
+    Padding="20"
+    Loaded="Page_Loaded">
 
-    <Grid>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-        </StackPanel>
-
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="AppTitleBar" Background="Transparent" Visibility="Collapsed">
+            <!-- Width of the padding columns is set in LayoutMetricsChanged handler. -->
+            <!-- Using padding columns instead of Margin ensures that the background
+                 paints the area under the caption control buttons (for transparent buttons). -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                <ColumnDefinition/>
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+            <Image Source="Assets/Square44x44Logo.png"
+                   Grid.Column="1" HorizontalAlignment="Left"
+                   Width="20" Height="20" Margin="12,0"/>
+            <TextBlock Text="Custom Title Bar"
+                       Grid.Column="1"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Margin="44,8,0,0"/>
+        </Grid>
+        <NavigationView Grid.Row="1">
+            <NavigationView.MenuItems>
+                <NavigationViewItemHeader/>
+            </NavigationView.MenuItems>
+            <Grid>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+                </StackPanel>
+            </Grid>
+        </NavigationView>
     </Grid>
 </Page>

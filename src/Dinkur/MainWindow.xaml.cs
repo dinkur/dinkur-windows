@@ -1,5 +1,5 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -11,9 +11,13 @@ namespace Dinkur
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public static AppWindow AppWindow { get; private set; }
+
         public MainWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            AppWindow = this.GetAppWindow();
         }
     }
 }
