@@ -31,14 +31,29 @@
                        Style="{StaticResource CaptionTextBlockStyle}"
                        Margin="44,8,0,0"/>
         </Grid>
-        <NavigationView Grid.Row="1">
+        <NavigationView Grid.Row="1" PaneDisplayMode="Top" IsBackButtonVisible="Collapsed">
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox QueryIcon="Add" PlaceholderText="New…" ToolTipService.ToolTip="Write name of a new task, and hit enter to start timing that task."/>
+            </NavigationView.AutoSuggestBox>
             <NavigationView.MenuItems>
-                <NavigationViewItemHeader/>
+                <NavigationViewItemHeader Content="Dinkur"/>
+                <NavigationViewItem Content="Tasks" Icon="List"/>
             </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Content="Stop" Icon="Stop" IsEnabled="false"/>
+            </NavigationView.FooterMenuItems>
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
                 </StackPanel>
+                <ListView Grid.Row="1" SelectionMode="None" SelectedIndex="1">
+                    <x:String>Some task 1</x:String>
+                    <x:String>Some other task</x:String>
+                </ListView>
             </Grid>
         </NavigationView>
     </Grid>

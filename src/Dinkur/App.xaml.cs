@@ -34,7 +34,7 @@ namespace Dinkur
             m_window = new MainWindow();
 
             IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
-            SetWindowSize(hwnd, 540, 460);
+            SetWindowSize(hwnd, 640, 480);
 
             m_window.Activate();
         }
