@@ -3,9 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Dinkur"
+    xmlns:types="using:Dinkur.Types"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:api="using:Dinkur.Api"
     mc:Ignorable="d"
     Padding="20"
     Loaded="Page_Loaded">
@@ -43,49 +43,51 @@
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem Content="Stop" Icon="Stop" IsEnabled="false"/>
             </NavigationView.FooterMenuItems>
-            <StackPanel Orientation="Vertical">
-                <ProgressBar x:Name="TaskProgressBar" IsIndeterminate="True"/>
-                <InfoBar x:Name="TaskErrorResults" Title="Error fetching today's tasks." Severity="Error" Visibility="Collapsed" IsClosable="False" IsOpen="True">
-                    <InfoBar.ActionButton>
-                        <Button Content="Refresh" Click="ReloadTasksButton_Click"/>
-                    </InfoBar.ActionButton>
-                </InfoBar>
-                <InfoBar x:Name="TaskNoResults" Title="No tasks today." Visibility="Collapsed" IsClosable="False" IsOpen="True"/>
-                <ListView x:Name="TaskListView" SelectionMode="None" SelectedIndex="1" Visibility="Collapsed">
-                    <ListView.Header>
-                        <Grid Padding="8">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="44"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="120"/>
-                                <ColumnDefinition Width="120"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="ID" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                            <TextBlock Grid.Column="1" Text="Name" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                            <TextBlock Grid.Column="2" Text="Start" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                            <TextBlock Grid.Column="3" Text="End" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                        </Grid>
-                    </ListView.Header>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="api:Task">
-                            <ListViewItem Background="{ThemeResource ListViewItemBackgroundPointerOver}" Padding="8">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="44"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="12345" MaxLines="1" TextTrimming="Clip"/>
-                                    <TextBlock Grid.Column="1" Text="{x:Bind Name}" Style="{ThemeResource BaseTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                                    <TextBlock Grid.Column="2" Text="{x:Bind Start}" MaxLines="1" TextTrimming="Clip"/>
-                                    <TextBlock Grid.Column="3" Text="{x:Bind End}" MaxLines="1" TextTrimming="Clip"/>
-                                </Grid>
-                            </ListViewItem>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
+            <ScrollViewer>
+                <StackPanel Orientation="Vertical" Padding="8">
+                    <ProgressBar x:Name="TaskProgressBar" IsIndeterminate="True"/>
+                    <InfoBar x:Name="TaskErrorResults" Title="Error fetching today's tasks." Severity="Error" Visibility="Collapsed" IsClosable="False" IsOpen="True">
+                        <InfoBar.ActionButton>
+                            <Button Content="Refresh" Click="ReloadTasksButton_Click"/>
+                        </InfoBar.ActionButton>
+                    </InfoBar>
+                    <InfoBar x:Name="TaskNoResults" Title="No tasks today." Visibility="Collapsed" IsClosable="False" IsOpen="True"/>
+                    <ListView x:Name="TaskListView" SelectionMode="None" SelectedIndex="1" Visibility="Collapsed" ItemsSource="{x:Bind tasks}">
+                        <ListView.Header>
+                            <Grid Padding="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="44"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="140"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="ID" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                                <TextBlock Grid.Column="1" Text="Name" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                                <TextBlock Grid.Column="2" Text="Start" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                                <TextBlock Grid.Column="3" Text="End" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="types:ImmutableTask">
+                                <ListViewItem Background="{ThemeResource ListViewItemBackgroundPointerOver}" Padding="8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="140"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Bind Id}" MaxLines="1" TextTrimming="Clip"/>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind Name}" Style="{ThemeResource BaseTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                                        <TextBlock Grid.Column="2" Text="{x:Bind Start}" MaxLines="1" TextTrimming="Clip"/>
+                                        <TextBlock Grid.Column="3" Text="{x:Bind End}" MaxLines="1" TextTrimming="Clip"/>
+                                    </Grid>
+                                </ListViewItem>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </ScrollViewer>
         </NavigationView>
     </Grid>
 </Page>
