@@ -5,6 +5,7 @@
     xmlns:local="using:Dinkur"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:api="using:Dinkur.Api"
     mc:Ignorable="d"
     Padding="20"
     Loaded="Page_Loaded">
@@ -42,19 +43,49 @@
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem Content="Stop" Icon="Stop" IsEnabled="false"/>
             </NavigationView.FooterMenuItems>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-                </StackPanel>
-                <ListView Grid.Row="1" SelectionMode="None" SelectedIndex="1">
-                    <x:String>Some task 1</x:String>
-                    <x:String>Some other task</x:String>
+            <StackPanel Orientation="Vertical">
+                <ProgressBar x:Name="TaskProgressBar" IsIndeterminate="True"/>
+                <InfoBar x:Name="TaskErrorResults" Title="Error fetching today's tasks." Severity="Error" Visibility="Collapsed" IsClosable="False" IsOpen="True">
+                    <InfoBar.ActionButton>
+                        <Button Content="Refresh" Click="ReloadTasksButton_Click"/>
+                    </InfoBar.ActionButton>
+                </InfoBar>
+                <InfoBar x:Name="TaskNoResults" Title="No tasks today." Visibility="Collapsed" IsClosable="False" IsOpen="True"/>
+                <ListView x:Name="TaskListView" SelectionMode="None" SelectedIndex="1" Visibility="Collapsed">
+                    <ListView.Header>
+                        <Grid Padding="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="44"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="120"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="ID" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                            <TextBlock Grid.Column="1" Text="Name" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                            <TextBlock Grid.Column="2" Text="Start" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                            <TextBlock Grid.Column="3" Text="End" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                        </Grid>
+                    </ListView.Header>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="api:Task">
+                            <ListViewItem Background="{ThemeResource ListViewItemBackgroundPointerOver}" Padding="8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="120"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="12345" MaxLines="1" TextTrimming="Clip"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Bind Name}" Style="{ThemeResource BaseTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                                    <TextBlock Grid.Column="2" Text="{x:Bind Start}" MaxLines="1" TextTrimming="Clip"/>
+                                    <TextBlock Grid.Column="3" Text="{x:Bind End}" MaxLines="1" TextTrimming="Clip"/>
+                                </Grid>
+                            </ListViewItem>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
-            </Grid>
+            </StackPanel>
         </NavigationView>
     </Grid>
 </Page>

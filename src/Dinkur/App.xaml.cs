@@ -1,6 +1,9 @@
 ﻿using System;
+using Dinkur.Api;
+using Grpc.Net.Client;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.Windows.AppLifecycle;
 using Windows.ApplicationModel.Core;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -14,6 +17,8 @@ namespace Dinkur
     public partial class App : Application
     {
         private Window m_window;
+        internal static Tasker.TaskerClient Tasker { get; private set; }
+        internal static Alerter.AlerterClient Alerter { get; private set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -21,7 +26,11 @@ namespace Dinkur
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            var channel = GrpcChannel.ForAddress("http://localhost:59122");
+            Tasker = new Tasker.TaskerClient(channel);
+            Alerter = new Alerter.AlerterClient(channel);
         }
 
         /// <summary>
