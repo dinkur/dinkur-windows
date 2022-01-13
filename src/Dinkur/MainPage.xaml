@@ -32,61 +32,21 @@
                        Style="{StaticResource CaptionTextBlockStyle}"
                        Margin="44,8,0,0"/>
         </Grid>
-        <NavigationView Grid.Row="1" PaneDisplayMode="Top" IsBackButtonVisible="Collapsed">
-            <NavigationView.AutoSuggestBox>
-                <AutoSuggestBox QueryIcon="Add" PlaceholderText="New…" ToolTipService.ToolTip="Write name of a new task, and hit enter to start timing that task."/>
-            </NavigationView.AutoSuggestBox>
+        <NavigationView x:Name="NavView" Grid.Row="1" PaneDisplayMode="Top" IsBackButtonVisible="Collapsed"
+                        Loaded="NavView_Loaded"
+                        SelectionChanged="NavView_SelectionChanged"
+                        BackRequested="NavView_BackRequested">
             <NavigationView.MenuItems>
-                <NavigationViewItemHeader Content="Dinkur"/>
-                <NavigationViewItem Content="Tasks" Icon="List"/>
+                <NavigationViewItem Tag="tasks" Content="Tasks"/>
             </NavigationView.MenuItems>
-            <NavigationView.FooterMenuItems>
-                <NavigationViewItem Content="Stop" Icon="Stop" IsEnabled="false"/>
-            </NavigationView.FooterMenuItems>
-            <ScrollViewer>
-                <StackPanel Orientation="Vertical" Padding="8">
-                    <ProgressBar x:Name="TaskProgressBar" IsIndeterminate="True"/>
-                    <InfoBar x:Name="TaskErrorResults" Title="Error fetching today's tasks." Severity="Error" Visibility="Collapsed" IsClosable="False" IsOpen="True">
-                        <InfoBar.ActionButton>
-                            <Button Content="Refresh" Click="ReloadTasksButton_Click"/>
-                        </InfoBar.ActionButton>
-                    </InfoBar>
-                    <InfoBar x:Name="TaskNoResults" Title="No tasks today." Visibility="Collapsed" IsClosable="False" IsOpen="True"/>
-                    <ListView x:Name="TaskListView" SelectionMode="None" SelectedIndex="1" Visibility="Collapsed" ItemsSource="{x:Bind tasks}">
-                        <ListView.Header>
-                            <Grid Padding="8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="44"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="140"/>
-                                    <ColumnDefinition Width="140"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="ID" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                                <TextBlock Grid.Column="1" Text="Name" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                                <TextBlock Grid.Column="2" Text="Start" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                                <TextBlock Grid.Column="3" Text="End" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                            </Grid>
-                        </ListView.Header>
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="types:ImmutableTask">
-                                <ListViewItem Background="{ThemeResource ListViewItemBackgroundPointerOver}" Padding="8">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="44"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="140"/>
-                                            <ColumnDefinition Width="140"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{x:Bind Id}" MaxLines="1" TextTrimming="Clip"/>
-                                        <TextBlock Grid.Column="1" Text="{x:Bind Name}" Style="{ThemeResource BaseTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                                        <TextBlock Grid.Column="2" Text="{x:Bind Start}" MaxLines="1" TextTrimming="Clip"/>
-                                        <TextBlock Grid.Column="3" Text="{x:Bind End}" MaxLines="1" TextTrimming="Clip"/>
-                                    </Grid>
-                                </ListViewItem>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox QueryIcon="Add" PlaceholderText="New…"
+                                ToolTipService.ToolTip="Write name of a new task, and hit enter to start timing that task."/>
+            </NavigationView.AutoSuggestBox>
+            <ScrollViewer Padding="12">
+                <Frame x:Name="ContentFrame" IsTabStop="True" CornerRadius="4"
+                       Navigated="ContentFrame_Navigated"
+                       NavigationFailed="ContentFrame_NavigationFailed"/>
             </ScrollViewer>
         </NavigationView>
     </Grid>

@@ -1,10 +1,7 @@
 ﻿using System;
 using Dinkur.Api;
 using Grpc.Net.Client;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Microsoft.Windows.AppLifecycle;
-using Windows.ApplicationModel.Core;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -16,7 +13,7 @@ namespace Dinkur
     /// </summary>
     public partial class App : Application
     {
-        private Window m_window;
+        internal static Window Window { get; private set; }
         internal static Tasker.TaskerClient Tasker { get; private set; }
         internal static Alerter.AlerterClient Alerter { get; private set; }
 
@@ -40,12 +37,12 @@ namespace Dinkur
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
+            Window = new MainWindow();
 
-            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Window);
             SetWindowSize(hwnd, 640, 480);
 
-            m_window.Activate();
+            Window.Activate();
         }
 
         private static void SetWindowSize(IntPtr hwnd, int width, int height)
