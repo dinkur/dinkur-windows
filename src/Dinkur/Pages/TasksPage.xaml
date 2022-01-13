@@ -17,7 +17,7 @@
             </InfoBar.ActionButton>
         </InfoBar>
         <InfoBar x:Name="TaskNoResults" Title="No tasks today." Visibility="Collapsed" IsClosable="False" IsOpen="True"/>
-        <ListView x:Name="TaskListView" SelectionMode="None" SelectedIndex="1" Visibility="Collapsed" ItemsSource="{x:Bind tasks}">
+        <ListView x:Name="TaskListView" SelectionMode="Single" Visibility="Collapsed" ItemsSource="{x:Bind tasks}">
             <ListView.Header>
                 <Grid Padding="8">
                     <Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="types:ImmutableTask">
-                    <ListViewItem Background="{ThemeResource ListViewItemBackgroundPointerOver}" Padding="8">
+                    <ListViewItem Padding="8">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="44"/>
