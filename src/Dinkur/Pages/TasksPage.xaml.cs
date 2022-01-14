@@ -6,6 +6,7 @@ using Dinkur.Types;
 using Grpc.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using AsyncTask = System.Threading.Tasks.Task;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -20,6 +21,7 @@ namespace Dinkur.Pages
     {
         private readonly SortedTaskList tasks = new();
         private readonly DinkurService dinkurService = new(App.Tasker, App.Alerter);
+        private ImmutableTask? taskCommandTarget;
 
         public TasksPage()
         {
@@ -43,9 +45,11 @@ namespace Dinkur.Pages
                             case EventType.Created:
                             case EventType.Updated:
                                 tasks.AddOrUpdateById(update.Task);
+                                ShowHideTaskListBasedOnCount();
                                 break;
                             case EventType.Deleted:
                                 tasks.RemoveById(update.Task.Id);
+                                ShowHideTaskListBasedOnCount();
                                 break;
                         }
                     }
@@ -70,18 +74,13 @@ namespace Dinkur.Pages
                 var response = await App.Tasker.GetTaskListAsync(new GetTaskListRequest {
                     Shorthand = GetTaskListRequest.Types.Shorthand.ThisDay
                 });
-                if (response?.Tasks == null || response.Tasks.Count == 0)
-                {
-                    TaskNoResults.Visibility = Visibility.Visible;
-                    return;
-                }
 
                 tasks.Clear();
                 foreach (var task in response.Tasks)
                 {
                     tasks.AddOrUpdateById(new ImmutableTask(task));
                 }
-                TaskListView.Visibility = Visibility.Visible;
+                ShowHideTaskListBasedOnCount();
             }
             catch (Exception e)
             {
@@ -94,9 +93,73 @@ namespace Dinkur.Pages
             }
         }
 
+        private void ShowHideTaskListBasedOnCount()
+        {
+            var hasTasks = tasks.Count > 0;
+            var visibleWhenTasks = hasTasks ? Visibility.Visible : Visibility.Collapsed;
+            var visibleWhenNoTasks = hasTasks ? Visibility.Collapsed : Visibility.Visible;
+            TaskNoResults.Visibility = visibleWhenNoTasks;
+            TaskListView.Visibility = visibleWhenTasks;
+        }
+
         private void ReloadTasksButton_Click(object sender, RoutedEventArgs e)
         {
             _ = ReloadTasks();
+        }
+
+        private void TaskListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var task = (ImmutableTask)e.ClickedItem;
+            taskCommandTarget = task;
+            TaskCommandStop.IsEnabled = task.End == null;
+            var container = (FrameworkElement)TaskListView.ContainerFromItem(task);
+            TaskCommandBarFlyout.ShowAt(container);
+        }
+
+        private async void TaskCommandStop_Click(object sender, RoutedEventArgs e)
+        {
+            if (taskCommandTarget == null)
+            {
+                return;
+            }
+            TaskCommandStop.IsEnabled = false;
+            TaskCommandBarFlyout.Hide();
+            await dinkurService.StopTask(taskCommandTarget.Id);
+        }
+
+        private void TaskCommandEdit_Click(object sender, RoutedEventArgs e)
+        {
+            if (taskCommandTarget == null)
+            {
+                return;
+            }
+            TaskCommandBarFlyout.Hide();
+            // TODO: Move to task edit modal or page
+        }
+
+        private async void TaskCommandDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (taskCommandTarget == null)
+            {
+                return;
+            }
+            TaskCommandBarFlyout.Hide();
+            var task = taskCommandTarget;
+            var dialog = new ContentDialog
+            {
+                Title = "Are you sure?",
+                PrimaryButtonText = "Delete task",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Close,
+                Content = new DeleteTaskDialog(task),
+                XamlRoot = Content.XamlRoot, // https://github.com/microsoft/microsoft-ui-xaml/issues/2504#issuecomment-632352279
+            };
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                await dinkurService.DeleteTask(task.Id);
+                ShowHideTaskListBasedOnCount();
+            }
         }
     }
 }

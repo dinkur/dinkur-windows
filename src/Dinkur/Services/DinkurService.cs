@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Dinkur.Api;
 using Dinkur.Types;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using AsyncTask = System.Threading.Tasks.Task;
 
 namespace Dinkur.Services
 {
@@ -27,6 +30,28 @@ namespace Dinkur.Services
                 }
                 yield return new TaskEvent(new ImmutableTask(resp.Task), ev);
             }
+        }
+
+        public async AsyncTask StopActiveTask()
+        {
+            await tasker.StopActiveTaskAsync(new StopActiveTaskRequest());
+        }
+
+        public async AsyncTask StopTask(ulong taskId)
+        {
+            await tasker.UpdateTaskAsync(new UpdateTaskRequest
+            {
+                IdOrZero = taskId,
+                End = DateTimeOffset.Now.ToTimestamp(),
+            });
+        }
+
+        public async AsyncTask DeleteTask(ulong taskId)
+        {
+            await tasker.DeleteTaskAsync(new DeleteTaskRequest
+            {
+                Id = taskId,
+            });
         }
 
         private static EventType? ConvertEventType(Event ev) =>

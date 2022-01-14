@@ -8,6 +8,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <CommandBarFlyout x:Name="TaskCommandBarFlyout" Placement="Right">
+            <CommandBarFlyout.PrimaryCommands>
+                <AppBarButton x:Name="TaskCommandEdit" Label="Edit" Icon="Edit" ToolTipService.ToolTip="Edit task"
+                    Click="TaskCommandEdit_Click"/>
+                <AppBarButton x:Name="TaskCommandStop" Label="Stop" Icon="Stop" ToolTipService.ToolTip="Stop task"
+                    Click="TaskCommandStop_Click"/>
+                <AppBarSeparator/>
+                <AppBarButton x:Name="TaskCommandDelete" Label="Delete" Icon="Delete" ToolTipService.ToolTip="Delete task"
+                              Click="TaskCommandDelete_Click"/>
+            </CommandBarFlyout.PrimaryCommands>
+        </CommandBarFlyout>
+    </Page.Resources>
 
     <StackPanel Orientation="Vertical" Padding="8">
         <ProgressBar x:Name="TaskProgressBar" IsIndeterminate="True"/>
@@ -17,7 +30,9 @@
             </InfoBar.ActionButton>
         </InfoBar>
         <InfoBar x:Name="TaskNoResults" Title="No tasks today." Visibility="Collapsed" IsClosable="False" IsOpen="True"/>
-        <ListView x:Name="TaskListView" SelectionMode="Single" Visibility="Collapsed" ItemsSource="{x:Bind tasks}">
+        <ListView x:Name="TaskListView" SelectionMode="None" IsItemClickEnabled="True" Visibility="Collapsed"
+              ItemsSource="{x:Bind tasks}"
+              ItemClick="TaskListView_ItemClick">
             <ListView.Header>
                 <Grid Padding="8">
                     <Grid.ColumnDefinitions>
@@ -35,7 +50,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="types:ImmutableTask">
                     <ListViewItem Padding="8">
-                        <Grid>
+                        <Grid VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="44"/>
                                 <ColumnDefinition Width="1*"/>
