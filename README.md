@@ -1,6 +1,7 @@
-# Dinkur .NET
+# Dinkur for Windows
 
-Dinkur .NET client libraries and desktop application.
+Dinkur desktop application for Windows,
+using the Windows App SDK (WinUI 3) framework.
 
 ## Contributing
 
