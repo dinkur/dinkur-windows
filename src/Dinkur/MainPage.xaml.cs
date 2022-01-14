@@ -15,6 +15,8 @@ namespace Dinkur
 {
     public sealed partial class MainPage : Page
     {
+        public static MainPage Current { get; private set; }
+
         private readonly (string tag, Type page)[] pages = {
             ("tasks", typeof(TasksPage)),
             ("settings", typeof(SettingsPage)),
@@ -22,6 +24,7 @@ namespace Dinkur
 
         public MainPage()
         {
+            Current = this;
             InitializeComponent();
         }
 
@@ -107,23 +110,51 @@ namespace Dinkur
                 var item = pages.FirstOrDefault(p => p.page == e.SourcePageType);
                 NavView.SelectedItem = NavView.MenuItems
                     .OfType<NavigationViewItem>()
-                    .First(n => n.Tag.Equals(item.tag));
+                    .FirstOrDefault(n => n.Tag.Equals(item.tag));
             }
         }
 
-        private bool Navigate(string tag, NavigationTransitionInfo transitionInfo)
+        public bool Navigate(Type pageType)
         {
-            var page = pages.FirstOrDefault(p => p.tag == tag).page;
-            if (page == null || ContentFrame.CurrentSourcePageType == page)
+            if (ContentFrame.CurrentSourcePageType == pageType)
             {
                 return false;
             }
-
-            ContentFrame.Navigate(page, null, transitionInfo);
+            ContentFrame.Navigate(pageType);
             return true;
         }
 
-        private bool NavigateBack()
+        public bool Navigate(Type pageType, object parameter)
+        {
+            if (ContentFrame.CurrentSourcePageType == pageType)
+            {
+                return false;
+            }
+            ContentFrame.Navigate(pageType, parameter);
+            return true;
+        }
+
+        public bool Navigate(Type pageType, NavigationTransitionInfo transitionInfo)
+        {
+            if (ContentFrame.CurrentSourcePageType == pageType)
+            {
+                return false;
+            }
+            ContentFrame.Navigate(pageType, null, transitionInfo);
+            return true;
+        }
+
+        public bool Navigate(string tag, NavigationTransitionInfo transitionInfo)
+        {
+            var pageType = pages.FirstOrDefault(p => p.tag == tag).page;
+            if (pageType == null)
+            {
+                return false;
+            }
+            return Navigate(pageType, transitionInfo);
+        }
+
+        public bool NavigateBack()
         {
             if (!ContentFrame.CanGoBack)
             {

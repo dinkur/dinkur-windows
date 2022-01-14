@@ -54,6 +54,17 @@ namespace Dinkur.Services
             });
         }
 
+        public async AsyncTask UpdateTask(ulong taskId, string? newName, DateTimeOffset? newStart, DateTimeOffset? newEnd)
+        {
+            await tasker.UpdateTaskAsync(new UpdateTaskRequest
+            {
+                IdOrZero = taskId,
+                Name = newName ?? "",
+                Start = newStart?.ToTimestamp(),
+                End = newEnd?.ToTimestamp(),
+            });
+        }
+
         private static EventType? ConvertEventType(Event ev) =>
             ev switch
             {

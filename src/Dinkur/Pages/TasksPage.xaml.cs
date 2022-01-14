@@ -127,14 +127,14 @@ namespace Dinkur.Pages
             await dinkurService.StopTask(taskCommandTarget.Id);
         }
 
-        private void TaskCommandEdit_Click(object sender, RoutedEventArgs e)
+        private async void TaskCommandEdit_Click(object sender, RoutedEventArgs e)
         {
             if (taskCommandTarget == null)
             {
                 return;
             }
             TaskCommandBarFlyout.Hide();
-            // TODO: Move to task edit modal or page
+            MainPage.Current.Navigate(typeof(EditTaskPage), taskCommandTarget);
         }
 
         private async void TaskCommandDelete_Click(object sender, RoutedEventArgs e)
