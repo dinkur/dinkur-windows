@@ -14,19 +14,19 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ScrollViewer>
-            <StackPanel>
+            <StackPanel Spacing="8">
                 <TextBox Header="Name" Text="{x:Bind TaskName, Mode=TwoWay}"/>
-                <StackPanel Orientation="Horizontal" Margin="0,8,0,0" Spacing="8">
+                <StackPanel Orientation="Horizontal" Spacing="8">
                     <DatePicker Header="Start date" Date="{x:Bind taskStartDate}"/>
                     <TimePicker x:Name="temp" Header="Start time" Time="{x:Bind taskStartTime}"/>
                 </StackPanel>
-                <Button x:Name="TaskEndEnableButton" Content="Enable end time"
-                ToolTipService.ToolTip="Setting the end time is an irreversable change and the task will no longer be active."
-                Click="TaskEndEnableButton_Click" Margin="0,8,0,0"/>
-                <StackPanel x:Name="TaskEndPickers" Visibility="Collapsed" Orientation="Horizontal" Margin="0,8,0,0" Spacing="8">
+                <StackPanel Orientation="Horizontal" Spacing="8">
                     <DatePicker Header="End date" SelectedDate="{x:Bind taskEndDate}"/>
                     <TimePicker Header="End time" SelectedTime="{x:Bind taskEndTime}"/>
                 </StackPanel>
+                <InfoBar x:Name="TaskEndTimeInfoBar" Title="Setting end time date &amp; time will stop the task."
+                         Message="This task is currently active, meaning it doesn't have a ending date time. Adding an ending date time will implicitly stop the task."
+                         IsOpen="True"/>
             </StackPanel>
         </ScrollViewer>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="48">

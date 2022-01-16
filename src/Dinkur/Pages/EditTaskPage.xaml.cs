@@ -30,12 +30,6 @@ namespace Dinkur.Pages
             this.InitializeComponent();
         }
 
-        private void TaskEndEnableButton_Click(object sender, RoutedEventArgs e)
-        {
-            TaskEndPickers.Visibility = Visibility.Visible;
-            TaskEndEnableButton.Visibility = Visibility.Collapsed;
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             task = (ImmutableTask)e.Parameter;
@@ -45,8 +39,7 @@ namespace Dinkur.Pages
             taskEndDate = task.End?.Date;
             taskEndTime = task.End?.TimeOfDay;
 
-            TaskEndPickers.Visibility = task.End.HasValue ? Visibility.Visible : Visibility.Collapsed;
-            TaskEndEnableButton.Visibility = !task.End.HasValue ? Visibility.Visible : Visibility.Collapsed;
+            TaskEndTimeInfoBar.Visibility = task.End.HasValue ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
