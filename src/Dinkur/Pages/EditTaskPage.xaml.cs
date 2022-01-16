@@ -20,10 +20,8 @@ namespace Dinkur.Pages
         private ImmutableTask task;
         public string TaskName { get; set; }
 
-        public DateTimeOffset taskStartDate;
-        private TimeSpan taskStartTime;
-        public DateTimeOffset? taskEndDate;
-        private TimeSpan? taskEndTime;
+        public DateTimeOffset? taskStart;
+        public DateTimeOffset? taskEnd;
 
         public EditTaskPage()
         {
@@ -34,10 +32,8 @@ namespace Dinkur.Pages
         {
             task = (ImmutableTask)e.Parameter;
             TaskName = task.Name;
-            taskStartDate = task.Start.Date;
-            taskStartTime = task.Start.TimeOfDay;
-            taskEndDate = task.End?.Date;
-            taskEndTime = task.End?.TimeOfDay;
+            taskStart = task.Start;
+            taskEnd = task.End;
 
             TaskEndTimeInfoBar.Visibility = task.End.HasValue ? Visibility.Collapsed : Visibility.Visible;
         }
@@ -45,7 +41,7 @@ namespace Dinkur.Pages
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             var newName = task.Name != TaskName ? TaskName : null;
-            await dinkurService.UpdateTask(task.Id, newName, null, null);
+            await dinkurService.UpdateTask(task.Id, newName, taskStart ?? DateTimeOffset.Now, taskEnd);
             MainPage.Current.NavigateBack();
         }
 

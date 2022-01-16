@@ -1,0 +1,33 @@
+﻿<UserControl
+    x:Class="Dinkur.Controls.DateTimePicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Dinkur.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal" Spacing="8">
+        <DatePicker SelectedDate="{x:Bind Date, Mode=TwoWay}">
+            <DatePicker.Header>
+                <RichTextBlock>
+                    <Paragraph>
+                        <Run Text="{x:Bind TimeLabel}"/> (<Hyperlink x:Name="DateToday" Click="DateToday_Click">Today</Hyperlink>,
+                        <Hyperlink x:Name="DateMinus1Day" Click="DateMinus1Day_Click">-1d</Hyperlink>)
+                    </Paragraph>
+                </RichTextBlock>
+            </DatePicker.Header>
+        </DatePicker>
+        <TimePicker SelectedTime="{x:Bind Time, Mode=TwoWay}">
+            <TimePicker.Header>
+                <RichTextBlock>
+                    <Paragraph>
+                        <Run Text="{x:Bind DateLabel}"/> (<Hyperlink x:Name="TimeNow" Click="TimeNow_Click">Now</Hyperlink>,
+                        <Hyperlink x:Name="TimeMinus5Min" Click="TimeMinus5Min_Click">-5min</Hyperlink>,
+                        <Hyperlink x:Name="TimeMinus15Min" Click="TimeMinus15Min_Click">-15min</Hyperlink>)
+                    </Paragraph>
+                </RichTextBlock>
+            </TimePicker.Header>
+        </TimePicker>
+    </StackPanel>
+</UserControl>

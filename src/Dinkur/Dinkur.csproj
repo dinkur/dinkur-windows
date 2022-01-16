@@ -12,6 +12,7 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\DateTimePicker.xaml" />
     <None Remove="Pages\DeleteTaskDialog.xaml" />
     <None Remove="Pages\EditTaskPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
@@ -61,6 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\TasksPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\DateTimePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
