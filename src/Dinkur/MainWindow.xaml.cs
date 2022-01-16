@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Windowing;
+﻿using System;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -11,13 +12,14 @@ namespace Dinkur
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        public static AppWindow AppWindow { get; private set; }
+        public static AppWindow AppWindow => _appWindow ?? throw new InvalidOperationException("App window has not yet been initialized.");
+        private static AppWindow? _appWindow;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            AppWindow = this.GetAppWindow();
+            _appWindow = this.GetAppWindow();
         }
     }
 }

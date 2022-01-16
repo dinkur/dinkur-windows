@@ -13,9 +13,13 @@ namespace Dinkur
     /// </summary>
     public partial class App : Application
     {
-        internal static Window Window { get; private set; }
-        internal static Tasker.TaskerClient Tasker { get; private set; }
-        internal static Alerter.AlerterClient Alerter { get; private set; }
+        private static Window? _window;
+        private static Tasker.TaskerClient? _tasker;
+        private static Alerter.AlerterClient? _alerter;
+
+        internal static Window Window => _window ?? throw new InvalidOperationException("Window has not yet been initialized.");
+        internal static Tasker.TaskerClient Tasker => _tasker ?? throw new InvalidOperationException("Dinkur Tasker service has not yet been initialized.");
+        internal static Alerter.AlerterClient Alerter => _alerter ?? throw new InvalidOperationException("Dinkur Alerter service has not yet been initialized.");
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -26,8 +30,8 @@ namespace Dinkur
             InitializeComponent();
 
             var channel = GrpcChannel.ForAddress("http://localhost:59122");
-            Tasker = new Tasker.TaskerClient(channel);
-            Alerter = new Alerter.AlerterClient(channel);
+            _tasker = new Tasker.TaskerClient(channel);
+            _alerter = new Alerter.AlerterClient(channel);
         }
 
         /// <summary>
@@ -37,12 +41,12 @@ namespace Dinkur
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            Window = new MainWindow();
+            _window = new MainWindow();
 
-            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Window);
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(_window);
             SetWindowSize(hwnd, 640, 480);
 
-            Window.Activate();
+            _window.Activate();
         }
 
         private static void SetWindowSize(IntPtr hwnd, int width, int height)

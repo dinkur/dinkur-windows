@@ -17,8 +17,8 @@ namespace Dinkur.Pages
     {
         private readonly DinkurService dinkurService = new(App.Tasker, App.Alerter);
 
-        private ImmutableTask task;
-        public string TaskName { get; set; }
+        private ImmutableTask? task;
+        public string? TaskName { get; set; }
 
         public DateTimeOffset? taskStart;
         public DateTimeOffset? taskEnd;
@@ -40,6 +40,11 @@ namespace Dinkur.Pages
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            if (task == null)
+            {
+                throw new InvalidOperationException("The task edit page has not been properly initialized with a task.");
+            }
+
             var newName = task.Name != TaskName ? TaskName : null;
             await dinkurService.UpdateTask(task.Id, newName, taskStart ?? DateTimeOffset.Now, taskEnd);
             MainPage.Current.NavigateBack();

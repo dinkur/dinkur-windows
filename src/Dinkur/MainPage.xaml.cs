@@ -15,7 +15,8 @@ namespace Dinkur
 {
     public sealed partial class MainPage : Page
     {
-        public static MainPage Current { get; private set; }
+        public static MainPage Current => _current ?? throw new InvalidOperationException("Main page has not been initialized yet.");
+        private static MainPage? _current;
 
         private readonly (string tag, Type page)[] pages = {
             ("tasks", typeof(TasksPage)),
@@ -24,13 +25,13 @@ namespace Dinkur
 
         public MainPage()
         {
-            Current = this;
+            _current = this;
             InitializeComponent();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            AppWindow appWindow = MainWindow.AppWindow;
+            var appWindow = MainWindow.AppWindow;
 
             // AppWindow.TitleBar is not yet supported on Windows 10 and is therefore always null
             // https://github.com/microsoft/WindowsAppSDK-Samples/issues/116
@@ -144,7 +145,7 @@ namespace Dinkur
             return true;
         }
 
-        public bool Navigate(string tag, NavigationTransitionInfo transitionInfo)
+        public bool Navigate(string? tag, NavigationTransitionInfo transitionInfo)
         {
             var pageType = pages.FirstOrDefault(p => p.tag == tag).page;
             if (pageType == null)

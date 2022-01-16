@@ -22,13 +22,13 @@ namespace Dinkur.Types
         public bool IsSynchronized { get; } = false;
         public object SyncRoot => this;
 
-        object IList.this[int index]
+        object? IList.this[int index]
         {
             get => tasks[index];
             set => throw new NotSupportedException();
         }
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         public SortedTaskList()
         {
@@ -108,12 +108,12 @@ namespace Dinkur.Types
             return tasks.GetEnumerator();
         }
 
-        public int Add(object value)
+        public int Add(object? value)
         {
             throw new NotSupportedException();
         }
 
-        public bool Contains(object value)
+        public bool Contains(object? value)
         {
             if (value is not ImmutableTask task)
             {
@@ -122,7 +122,7 @@ namespace Dinkur.Types
             return tasks.Contains(task);
         }
 
-        public int IndexOf(object value)
+        public int IndexOf(object? value)
         {
             if (value is not ImmutableTask task)
             {
@@ -131,12 +131,12 @@ namespace Dinkur.Types
             return tasks.IndexOf(task);
         }
 
-        public void Insert(int index, object value)
+        public void Insert(int index, object? value)
         {
             throw new NotSupportedException();
         }
 
-        public void Remove(object value)
+        public void Remove(object? value)
         {
             throw new NotSupportedException();
         }
@@ -153,14 +153,20 @@ namespace Dinkur.Types
 
         private sealed class ImmutableTaskStartComparer : IEqualityComparer<ImmutableTask>, IComparer<ImmutableTask>
         {
-            public int Compare(ImmutableTask x, ImmutableTask y)
+            public int Compare(ImmutableTask? x, ImmutableTask? y)
             {
-                return x.Start.CompareTo(y.Start);
+                return (x, y) switch
+                {
+                    (null, null) => 0,
+                    (null, _) => -1,
+                    (_, null) => 1,
+                    _ => x.Start.CompareTo(y.Start),
+                };
             }
 
-            public bool Equals(ImmutableTask x, ImmutableTask y)
+            public bool Equals(ImmutableTask? x, ImmutableTask? y)
             {
-                return x.Start == y.Start;
+                return x?.Start == y?.Start;
             }
 
             public int GetHashCode([DisallowNull] ImmutableTask obj)

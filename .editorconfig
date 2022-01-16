@@ -5,8 +5,15 @@ indent_style = space
 
 #prefer accessibility modifiers to be declared except for public interface members. This will currently not differ from always and will act as future proofing for if C# adds default interface methods.
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
-insert_final_newline=true
+
+# S3010: Static fields should not be updated in constructors
+dotnet_diagnostic.S3010.severity = silent
+
+# S2696: Instance members should not write to "static" fields
+dotnet_diagnostic.S2696.severity = silent
 
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping=beginning_of_line
 end_of_line=lf
+insert_final_newline=true
+

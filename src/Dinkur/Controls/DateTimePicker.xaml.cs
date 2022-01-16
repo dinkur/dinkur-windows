@@ -19,8 +19,8 @@ namespace Dinkur.Controls
         private static readonly TimeSpan span15Min = TimeSpan.FromMinutes(15);
         private static readonly TimeSpan span5Min = TimeSpan.FromMinutes(5);
 
-        public string DateLabel { get; set; }
-        public string TimeLabel { get; set; }
+        public string? DateLabel { get; set; }
+        public string? TimeLabel { get; set; }
 
         public DateTimeOffset? DateTime
         {
@@ -40,14 +40,14 @@ namespace Dinkur.Controls
             set => SetDateTime(Date, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public DateTimePicker()
         {
             this.InitializeComponent();
         }
 
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
