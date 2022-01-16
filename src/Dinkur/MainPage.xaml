@@ -43,6 +43,12 @@
                 <AutoSuggestBox QueryIcon="Add" PlaceholderText="New…"
                                 ToolTipService.ToolTip="Write name of a new task, and hit enter to start timing that task."/>
             </NavigationView.AutoSuggestBox>
+            <NavigationView.PaneFooter>
+                <CommandBar>
+                    <AppBarButton Label="Stop task" Icon="Stop" Height="64" Width="40" IsEnabled="False"
+                                  IsCompact="True" ToolTipService.ToolTip="Stop active task."/>
+                </CommandBar>
+            </NavigationView.PaneFooter>
             <ScrollViewer Padding="12">
                 <Frame x:Name="ContentFrame" IsTabStop="True" CornerRadius="4"
                        Navigated="ContentFrame_Navigated"
