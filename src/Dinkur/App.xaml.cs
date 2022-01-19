@@ -14,11 +14,11 @@ namespace Dinkur
     public partial class App : Application
     {
         private static Window? _window;
-        private static Tasker.TaskerClient? _tasker;
+        private static Entries.EntriesClient? _entries;
         private static Alerter.AlerterClient? _alerter;
 
         internal static Window Window => _window ?? throw new InvalidOperationException("Window has not yet been initialized.");
-        internal static Tasker.TaskerClient Tasker => _tasker ?? throw new InvalidOperationException("Dinkur Tasker service has not yet been initialized.");
+        internal static Entries.EntriesClient Entries => _entries ?? throw new InvalidOperationException("Dinkur Entries service has not yet been initialized.");
         internal static Alerter.AlerterClient Alerter => _alerter ?? throw new InvalidOperationException("Dinkur Alerter service has not yet been initialized.");
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Dinkur
             InitializeComponent();
 
             var channel = GrpcChannel.ForAddress("http://localhost:59122");
-            _tasker = new Tasker.TaskerClient(channel);
+            _entries = new Entries.EntriesClient(channel);
             _alerter = new Alerter.AlerterClient(channel);
         }
 

@@ -1,68 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Dinkur.Api;
 using Dinkur.Types;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using AsyncTask = System.Threading.Tasks.Task;
 
 namespace Dinkur.Services
 {
     internal class DinkurService
     {
-        private readonly Tasker.TaskerClient tasker;
+        private readonly Entries.EntriesClient entries;
         private readonly Alerter.AlerterClient alerter;
 
-        public DinkurService(Tasker.TaskerClient tasker, Alerter.AlerterClient alerter)
+        public DinkurService(Entries.EntriesClient entries, Alerter.AlerterClient alerter)
         {
-            this.tasker = tasker;
+            this.entries = entries;
             this.alerter = alerter;
         }
 
-        public async IAsyncEnumerable<TaskEvent> StreamTasks()
+        public async IAsyncEnumerable<EntryEvent> StreamEntrys()
         {
-            var stream = tasker.StreamTask(new StreamTaskRequest());
+            var stream = entries.StreamEntry(new StreamEntryRequest());
             await foreach (var resp in stream.ResponseStream.ReadAllAsync())
             {
                 if (resp == null || ConvertEventType(resp.Event) is not EventType ev)
                 {
                     continue;
                 }
-                yield return new TaskEvent(new ImmutableTask(resp.Task), ev);
+                yield return new EntryEvent(new ImmutableEntry(resp.Entry), ev);
             }
         }
 
-        public async AsyncTask StopActiveTask()
+        public async Task StopActiveEntry()
         {
-            await tasker.StopActiveTaskAsync(new StopActiveTaskRequest());
+            await entries.StopActiveEntryAsync(new StopActiveEntryRequest());
         }
 
-        public async AsyncTask StopTask(ulong taskId)
+        public async Task StopEntry(ulong entryId)
         {
-            await tasker.UpdateTaskAsync(new UpdateTaskRequest
+            await entries.UpdateEntryAsync(new UpdateEntryRequest
             {
-                IdOrZero = taskId,
+                IdOrZero = entryId,
                 End = DateTimeOffset.Now.ToTimestamp(),
             });
         }
 
-        public async AsyncTask DeleteTask(ulong taskId)
+        public async Task DeleteEntry(ulong entryId)
         {
-            await tasker.DeleteTaskAsync(new DeleteTaskRequest
+            await entries.DeleteEntryAsync(new DeleteEntryRequest
             {
-                Id = taskId,
+                Id = entryId,
             });
         }
 
-        public async AsyncTask UpdateTask(ulong taskId, string? newName, DateTimeOffset? newStart, DateTimeOffset? newEnd)
+        public async Task UpdateEntry(ulong entryId, string? newName, DateTimeOffset? newStart, DateTimeOffset? newEnd)
         {
-            await tasker.UpdateTaskAsync(new UpdateTaskRequest
+            await entries.UpdateEntryAsync(new UpdateEntryRequest
             {
-                IdOrZero = taskId,
+                IdOrZero = entryId,
                 Name = newName ?? "",
                 Start = newStart?.ToTimestamp(),
                 End = newEnd?.ToTimestamp(),
             });
+        }
+
+        public async Task<ImmutableEntry?> GetActiveEntry()
+        {
+            var activeEntry = (await entries.GetActiveEntryAsync(new GetActiveEntryRequest())).ActiveEntry;
+            return activeEntry == null ? null : new ImmutableEntry(activeEntry);
         }
 
         private static EventType? ConvertEventType(Event ev) =>

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\entries.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.19.2" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0" />
     <PackageReference Include="Grpc.Tools" Version="2.43.0">
@@ -17,7 +21,7 @@
 
   <ItemGroup>
     <Protobuf Include="Protos/event.proto" GrpcServices="Client" />
-    <Protobuf Include="Protos/tasker.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos/entries.proto" GrpcServices="Client" />
     <Protobuf Include="Protos/alerter.proto" GrpcServices="Client" />
   </ItemGroup>
 

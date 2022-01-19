@@ -14,10 +14,10 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\DateTimePicker.xaml" />
-    <None Remove="Pages\DeleteTaskDialog.xaml" />
-    <None Remove="Pages\EditTaskPage.xaml" />
+    <None Remove="Pages\DeleteEntryDialog.xaml" />
+    <None Remove="Pages\EditEntryPage.xaml" />
+    <None Remove="Pages\EntriesPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
-    <None Remove="Pages\TasksPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,12 +57,12 @@
     <ProjectReference Include="..\Dinkur.Api\Dinkur.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\EditTaskPage.xaml">
+    <Page Update="Pages\EditEntryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\DeleteTaskDialog.xaml">
+    <Page Update="Pages\DeleteEntryDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -72,7 +72,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\TasksPage.xaml">
+    <Page Update="Pages\EntriesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

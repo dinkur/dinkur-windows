@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Dinkur.Pages.TasksPage"
+    x:Class="Dinkur.Pages.EntriesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Dinkur.Pages"
@@ -9,30 +9,30 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <CommandBarFlyout x:Name="TaskCommandBarFlyout" Placement="Right">
+        <CommandBarFlyout x:Name="EntryCommandBarFlyout" Placement="Right">
             <CommandBarFlyout.PrimaryCommands>
-                <AppBarButton x:Name="TaskCommandEdit" Label="Edit" Icon="Edit" ToolTipService.ToolTip="Edit task"
-                    Click="TaskCommandEdit_Click"/>
-                <AppBarButton x:Name="TaskCommandStop" Label="Stop" Icon="Stop" ToolTipService.ToolTip="Stop task"
-                    Click="TaskCommandStop_Click"/>
+                <AppBarButton x:Name="EntryCommandEdit" Label="Edit" Icon="Edit" ToolTipService.ToolTip="Edit entry"
+                    Click="EntryCommandEdit_Click"/>
+                <AppBarButton x:Name="EntryCommandStop" Label="Stop" Icon="Stop" ToolTipService.ToolTip="Stop entry"
+                    Click="EntryCommandStop_Click"/>
                 <AppBarSeparator/>
-                <AppBarButton x:Name="TaskCommandDelete" Label="Delete" Icon="Delete" ToolTipService.ToolTip="Delete task"
-                              Click="TaskCommandDelete_Click"/>
+                <AppBarButton x:Name="EntryCommandDelete" Label="Delete" Icon="Delete" ToolTipService.ToolTip="Delete entry"
+                              Click="EntryCommandDelete_Click"/>
             </CommandBarFlyout.PrimaryCommands>
         </CommandBarFlyout>
     </Page.Resources>
 
     <StackPanel Orientation="Vertical" Padding="8">
-        <ProgressBar x:Name="TaskProgressBar" IsIndeterminate="True"/>
-        <InfoBar x:Name="TaskErrorResults" Title="Error fetching today's tasks." Severity="Error" Visibility="Collapsed" IsClosable="False" IsOpen="True">
+        <ProgressBar x:Name="EntryProgressBar" IsIndeterminate="True"/>
+        <InfoBar x:Name="EntryErrorResults" Title="Error fetching today's entries." Severity="Error" Visibility="Collapsed" IsClosable="False" IsOpen="True">
             <InfoBar.ActionButton>
-                <Button Content="Refresh" Click="ReloadTasksButton_Click"/>
+                <Button Content="Refresh" Click="ReloadEntriesButton_Click"/>
             </InfoBar.ActionButton>
         </InfoBar>
-        <InfoBar x:Name="TaskNoResults" Title="No tasks today." Visibility="Collapsed" IsClosable="False" IsOpen="True"/>
-        <ListView x:Name="TaskListView" SelectionMode="None" IsItemClickEnabled="True" Visibility="Collapsed"
-              ItemsSource="{x:Bind tasks}"
-              ItemClick="TaskListView_ItemClick">
+        <InfoBar x:Name="EntryNoResults" Title="No entires today." Visibility="Collapsed" IsClosable="False" IsOpen="True"/>
+        <ListView x:Name="EntryListView" SelectionMode="None" IsItemClickEnabled="True" Visibility="Collapsed"
+              ItemsSource="{x:Bind entries}"
+              ItemClick="EntryListView_ItemClick">
             <ListView.Header>
                 <Grid Padding="8">
                     <Grid.ColumnDefinitions>
@@ -48,7 +48,7 @@
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="types:ImmutableTask">
+                <DataTemplate x:DataType="types:ImmutableEntry">
                     <ListViewItem Padding="8">
                         <Grid VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>

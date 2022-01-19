@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Dinkur.Pages.EditTaskPage"
+    x:Class="Dinkur.Pages.EditEntryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Dinkur.Controls"
@@ -15,11 +15,11 @@
         </Grid.RowDefinitions>
         <ScrollViewer>
             <StackPanel Spacing="8">
-                <TextBox Header="Name" Text="{x:Bind TaskName, Mode=TwoWay}"/>
-                <local:DateTimePicker DateLabel="End date" TimeLabel="End time" DateTime="{x:Bind taskStart, Mode=TwoWay}"/>
-                <local:DateTimePicker DateLabel="End date" TimeLabel="End time" DateTime="{x:Bind taskEnd, Mode=TwoWay}"/>
-                <InfoBar x:Name="TaskEndTimeInfoBar" Title="Setting end time date &amp; time will stop the task."
-                         Message="This task is currently active, meaning it doesn't have a ending date time. Adding an ending date time will implicitly stop the task."
+                <TextBox Header="Name" Text="{x:Bind EntryName, Mode=TwoWay}"/>
+                <local:DateTimePicker DateLabel="End date" TimeLabel="End time" DateTime="{x:Bind entryStart, Mode=TwoWay}"/>
+                <local:DateTimePicker DateLabel="End date" TimeLabel="End time" DateTime="{x:Bind entryEnd, Mode=TwoWay}"/>
+                <InfoBar x:Name="EntryEndTimeInfoBar" Title="Setting end time date &amp; time will stop the entry."
+                         Message="This entry is currently active, meaning it doesn't have a ending date time. Adding an ending date time will implicitly stop the entry."
                          IsOpen="True"/>
             </StackPanel>
         </ScrollViewer>

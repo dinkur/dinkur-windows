@@ -22,14 +22,14 @@ namespace Dinkur.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    internal sealed partial class DeleteTaskDialog : Page
+    internal sealed partial class DeleteEntryDialog : Page
     {
-        private readonly ImmutableTask task;
+        private readonly ImmutableEntry entry;
 
-        public DeleteTaskDialog(ImmutableTask task)
+        public DeleteEntryDialog(ImmutableEntry entry)
         {
             this.InitializeComponent();
-            this.task = task;
+            this.entry = entry;
         }
     }
 }

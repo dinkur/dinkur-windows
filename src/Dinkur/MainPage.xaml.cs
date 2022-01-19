@@ -19,7 +19,7 @@ namespace Dinkur
         private static MainPage? _current;
 
         private readonly (string tag, Type page)[] pages = {
-            ("tasks", typeof(TasksPage)),
+            ("entries", typeof(EntriesPage)),
             ("settings", typeof(SettingsPage)),
         };
 
@@ -164,6 +164,22 @@ namespace Dinkur
 
             ContentFrame.GoBack();
             return true;
+        }
+
+        private void EntryQuickChangeBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+        }
+
+        private void EntryQuickChangeBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void EntryQuickChangeBox_ProcessKeyboardAccelerators(UIElement sender, Microsoft.UI.Xaml.Input.ProcessKeyboardAcceleratorEventArgs args)
+        {
+            if (args.Key == Windows.System.VirtualKey.Escape)
+            {
+                // Reset field
+            }
         }
     }
 }

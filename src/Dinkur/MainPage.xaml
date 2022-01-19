@@ -37,16 +37,19 @@
                         SelectionChanged="NavView_SelectionChanged"
                         BackRequested="NavView_BackRequested">
             <NavigationView.MenuItems>
-                <NavigationViewItem Tag="tasks" Content="Tasks"/>
+                <NavigationViewItem Tag="entries" Content="Entries"/>
             </NavigationView.MenuItems>
             <NavigationView.AutoSuggestBox>
-                <AutoSuggestBox QueryIcon="Add" PlaceholderText="New…"
-                                ToolTipService.ToolTip="Write name of a new task, and hit enter to start timing that task."/>
+                <AutoSuggestBox x:Name="EntryQuickChangeBox" QueryIcon="Add" PlaceholderText="New…"
+                                ToolTipService.ToolTip="Write name of a new entry, and hit enter to start timing that entry."
+                                QuerySubmitted="EntryQuickChangeBox_QuerySubmitted"
+                                LostFocus="EntryQuickChangeBox_LostFocus"
+                                ProcessKeyboardAccelerators="EntryQuickChangeBox_ProcessKeyboardAccelerators"/>
             </NavigationView.AutoSuggestBox>
             <NavigationView.PaneFooter>
                 <CommandBar>
-                    <AppBarButton Label="Stop task" Icon="Stop" Height="64" Width="40" IsEnabled="False"
-                                  IsCompact="True" ToolTipService.ToolTip="Stop active task."/>
+                    <AppBarButton Label="Stop entry" Icon="Stop" Height="64" Width="40" IsEnabled="False"
+                                  IsCompact="True" ToolTipService.ToolTip="Stop active entry."/>
                 </CommandBar>
             </NavigationView.PaneFooter>
             <ScrollViewer Padding="12">
