@@ -28,7 +28,7 @@ namespace Dinkur.Pages
 
         public DeleteEntryDialog(ImmutableEntry entry)
         {
-            this.InitializeComponent();
+            InitializeComponent();
             this.entry = entry;
         }
     }

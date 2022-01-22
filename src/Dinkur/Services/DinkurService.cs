@@ -20,8 +20,8 @@ namespace Dinkur.Services
 
         public DinkurService(Entries.EntriesClient entries, Alerter.AlerterClient alerter)
         {
-            this._entries = entries;
-            this._alerter = alerter;
+            _entries = entries;
+            _alerter = alerter;
         }
 
         private void OnEntryStreamEvent(EntryStreamEventArgs args)

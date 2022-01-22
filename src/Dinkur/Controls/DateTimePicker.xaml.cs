@@ -44,7 +44,7 @@ namespace Dinkur.Controls
 
         public DateTimePicker()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

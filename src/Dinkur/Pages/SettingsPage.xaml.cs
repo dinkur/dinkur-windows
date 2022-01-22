@@ -25,7 +25,7 @@ namespace Dinkur.Pages
     {
         public SettingsPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

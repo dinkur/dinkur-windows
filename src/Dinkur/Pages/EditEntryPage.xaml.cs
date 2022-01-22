@@ -25,7 +25,7 @@ namespace Dinkur.Pages
 
         public EditEntryPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
