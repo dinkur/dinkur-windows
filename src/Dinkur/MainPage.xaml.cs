@@ -172,6 +172,7 @@ namespace Dinkur
 
         private void EntryQuickChangeBox_LostFocus(object sender, RoutedEventArgs e)
         {
+            ResetQuickChangeBoxToCurrentTask();
         }
 
         private void EntryQuickChangeBox_ProcessKeyboardAccelerators(UIElement sender, Microsoft.UI.Xaml.Input.ProcessKeyboardAcceleratorEventArgs args)
@@ -179,7 +180,12 @@ namespace Dinkur
             if (args.Key == Windows.System.VirtualKey.Escape)
             {
                 // Reset field
+                ResetQuickChangeBoxToCurrentTask();
             }
+        }
+
+        private void ResetQuickChangeBoxToCurrentTask()
+        {
         }
     }
 }

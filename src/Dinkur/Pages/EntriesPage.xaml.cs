@@ -38,7 +38,7 @@ namespace Dinkur.Pages
             {
                 try
                 {
-                    await foreach (var update in dinkurService.StreamEntrys())
+                    await foreach (var update in dinkurService.StreamEntries())
                     {
                         switch (update.EventType)
                         {
