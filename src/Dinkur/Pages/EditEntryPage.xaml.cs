@@ -15,7 +15,7 @@ namespace Dinkur.Pages
     /// </summary>
     public sealed partial class EditEntryPage : Page
     {
-        private readonly DinkurService dinkurService = App.Window.DinkurService;
+        private readonly DinkurService dinkurService = App.DinkurService;
 
         private ImmutableEntry? entry;
         public string? EntryName { get; set; }

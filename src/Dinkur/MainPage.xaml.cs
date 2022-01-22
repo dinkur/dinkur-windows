@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Dinkur.Pages;
 using Dinkur.Services;
+using Dinkur.Types;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -20,10 +22,14 @@ namespace Dinkur
         public static MainPage Current => _current ?? throw new InvalidOperationException("Main page has not been initialized yet.");
         private static MainPage? _current;
 
-        private readonly (string tag, Type page)[] pages = {
+        private readonly DinkurService _dinkurService = App.DinkurService;
+
+        private readonly (string tag, Type page)[] _pages = {
             ("entries", typeof(EntriesPage)),
             ("settings", typeof(SettingsPage)),
         };
+
+        private ImmutableEntry? _activeEntry;
 
         public MainPage()
         {
@@ -34,6 +40,8 @@ namespace Dinkur
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             var appWindow = MainWindow.AppWindow;
+
+            _ = UpdateCurrentTask();
 
             // AppWindow.TitleBar is not yet supported on Windows 10 and is therefore always null
             // https://github.com/microsoft/WindowsAppSDK-Samples/issues/116
@@ -110,7 +118,7 @@ namespace Dinkur
             }
             else if (ContentFrame.SourcePageType != null)
             {
-                var item = pages.FirstOrDefault(p => p.page == e.SourcePageType);
+                var item = _pages.FirstOrDefault(p => p.page == e.SourcePageType);
                 NavView.SelectedItem = NavView.MenuItems
                     .OfType<NavigationViewItem>()
                     .FirstOrDefault(n => n.Tag.Equals(item.tag));
@@ -149,7 +157,7 @@ namespace Dinkur
 
         public bool Navigate(string? tag, NavigationTransitionInfo transitionInfo)
         {
-            var pageType = pages.FirstOrDefault(p => p.tag == tag).page;
+            var pageType = _pages.FirstOrDefault(p => p.tag == tag).page;
             if (pageType == null)
             {
                 return false;
@@ -188,6 +196,27 @@ namespace Dinkur
 
         private void ResetQuickChangeBoxToCurrentTask()
         {
+            EntryQuickChangeBox.Text = _activeEntry?.Name ?? string.Empty;
+        }
+
+        private async Task UpdateCurrentTask()
+        {
+            EntryQuickChangeBox.PlaceholderText = "Loading…";
+            try
+            {
+                _activeEntry = await _dinkurService.GetActiveEntry(App.Window.CloseCancellationToken);
+            }
+            catch
+            {
+                // Oh no! Swallow the error
+                // TODO: Show error somehow
+                _activeEntry = null;
+            }
+            finally
+            {
+                EntryQuickChangeBox.PlaceholderText = "New…";
+            }
+            ResetQuickChangeBoxToCurrentTask();
         }
     }
 }

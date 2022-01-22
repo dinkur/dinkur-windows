@@ -19,30 +19,23 @@ namespace Dinkur
         public static AppWindow AppWindow => _appWindow ?? throw new InvalidOperationException("App window has not yet been initialized.");
         private static AppWindow? _appWindow;
 
-        public Entries.EntriesClient Entries { get; }
-        public Alerter.AlerterClient Alerter { get; }
-        public DinkurService DinkurService { get; }
+        public CancellationToken CloseCancellationToken => _windowCloseCancellationSource.Token;
 
-        private readonly CancellationTokenSource windowCancellationSource = new();
+        private readonly CancellationTokenSource _windowCloseCancellationSource = new();
 
         public MainWindow()
         {
             _appWindow = this.GetAppWindow();
 
-            var channel = GrpcChannel.ForAddress("http://localhost:59122");
-            Entries = new Entries.EntriesClient(channel);
-            Alerter = new Alerter.AlerterClient(channel);
-            DinkurService = new DinkurService(Entries, Alerter);
-
             InitializeComponent();
 
             Closed += MainWindow_Closed;
-            _ = DinkurService.StreamEntriesAsEvents(windowCancellationSource.Token);
+            _ = App.DinkurService.StreamEntriesAsEvents(CloseCancellationToken);
         }
 
         private void MainWindow_Closed(object sender, WindowEventArgs args)
         {
-            windowCancellationSource.Cancel();
+            _windowCloseCancellationSource.Cancel();
         }
     }
 }

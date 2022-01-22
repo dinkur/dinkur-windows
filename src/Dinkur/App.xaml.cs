@@ -1,5 +1,6 @@
 ﻿using System;
 using Dinkur.Api;
+using Dinkur.Services;
 using Grpc.Net.Client;
 using Microsoft.UI.Xaml;
 
@@ -16,6 +17,18 @@ namespace Dinkur
         private static MainWindow? _window;
         internal static MainWindow Window => _window ?? throw new InvalidOperationException("Window has not yet been initialized.");
 
+        public static Entries.EntriesClient Entries { get; }
+        public static Alerter.AlerterClient Alerter { get; }
+        public static DinkurService DinkurService { get; }
+
+        static App()
+        {
+            var channel = GrpcChannel.ForAddress("http://localhost:59122");
+            Entries = new Entries.EntriesClient(channel);
+            Alerter = new Alerter.AlerterClient(channel);
+            DinkurService = new DinkurService(Entries, Alerter);
+        }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -23,7 +36,6 @@ namespace Dinkur
         public App()
         {
             InitializeComponent();
-
         }
 
         /// <summary>

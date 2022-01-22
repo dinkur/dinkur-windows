@@ -20,7 +20,7 @@ namespace Dinkur.Pages
     public sealed partial class EntriesPage : Page
     {
         private readonly SortedEntryList entries = new();
-        private readonly DinkurService dinkurService = App.Window.DinkurService;
+        private readonly DinkurService dinkurService = App.DinkurService;
         private ImmutableEntry? entriesCommandTarget;
 
         public EntriesPage()
@@ -72,7 +72,7 @@ namespace Dinkur.Pages
                 EntryListView.Visibility = Visibility.Collapsed;
 
                 entries.Clear();
-                foreach (var entry in await dinkurService.GetEntryListToday())
+                foreach (var entry in await dinkurService.GetEntryListToday(App.Window.CloseCancellationToken))
                 {
                     entries.AddOrUpdateById(entry);
                 }
