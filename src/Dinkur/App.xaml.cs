@@ -13,13 +13,8 @@ namespace Dinkur
     /// </summary>
     public partial class App : Application
     {
-        private static Window? _window;
-        private static Entries.EntriesClient? _entries;
-        private static Alerter.AlerterClient? _alerter;
-
-        internal static Window Window => _window ?? throw new InvalidOperationException("Window has not yet been initialized.");
-        internal static Entries.EntriesClient Entries => _entries ?? throw new InvalidOperationException("Dinkur Entries service has not yet been initialized.");
-        internal static Alerter.AlerterClient Alerter => _alerter ?? throw new InvalidOperationException("Dinkur Alerter service has not yet been initialized.");
+        private static MainWindow? _window;
+        internal static MainWindow Window => _window ?? throw new InvalidOperationException("Window has not yet been initialized.");
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -29,9 +24,6 @@ namespace Dinkur
         {
             InitializeComponent();
 
-            var channel = GrpcChannel.ForAddress("http://localhost:59122");
-            _entries = new Entries.EntriesClient(channel);
-            _alerter = new Alerter.AlerterClient(channel);
         }
 
         /// <summary>

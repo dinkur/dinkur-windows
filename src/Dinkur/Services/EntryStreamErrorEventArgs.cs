@@ -3,7 +3,7 @@ using Dinkur.Types;
 
 namespace Dinkur.Services
 {
-    internal class EntryStreamErrorEventArgs : EventArgs
+    public class EntryStreamErrorEventArgs : EventArgs
     {
         public Exception Exception { get; }
 

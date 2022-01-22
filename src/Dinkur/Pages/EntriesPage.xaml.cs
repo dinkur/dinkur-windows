@@ -20,7 +20,7 @@ namespace Dinkur.Pages
     public sealed partial class EntriesPage : Page
     {
         private readonly SortedEntryList entries = new();
-        private readonly DinkurService dinkurService = new(App.Entries, App.Alerter);
+        private readonly DinkurService dinkurService = App.Window.DinkurService;
         private ImmutableEntry? entriesCommandTarget;
 
         public EntriesPage()
@@ -38,7 +38,7 @@ namespace Dinkur.Pages
             {
                 try
                 {
-                    await foreach (var update in dinkurService.StreamEntries())
+                    await foreach (var update in dinkurService.GetEntryStream())
                     {
                         switch (update.EventType)
                         {
@@ -71,14 +71,10 @@ namespace Dinkur.Pages
                 EntryNoResults.Visibility = Visibility.Collapsed;
                 EntryListView.Visibility = Visibility.Collapsed;
 
-                var response = await App.Entries.GetEntryListAsync(new GetEntryListRequest {
-                    Shorthand = GetEntryListRequest.Types.Shorthand.ThisDay
-                });
-
                 entries.Clear();
-                foreach (var entry in response.Entries)
+                foreach (var entry in await dinkurService.GetEntryListToday())
                 {
-                    entries.AddOrUpdateById(new ImmutableEntry(entry));
+                    entries.AddOrUpdateById(entry);
                 }
                 ShowHideEntryListBasedOnCount();
             }

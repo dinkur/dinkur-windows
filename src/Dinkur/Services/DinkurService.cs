@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,17 +11,17 @@ using Grpc.Core;
 
 namespace Dinkur.Services
 {
-    internal sealed class DinkurService
+    public sealed class DinkurService
     {
-        private readonly Entries.EntriesClient entries;
-        private readonly Alerter.AlerterClient alerter;
+        private readonly Entries.EntriesClient _entries;
+        private readonly Alerter.AlerterClient _alerter;
         public event EventHandler<EntryStreamEventArgs>? EntryStreamEvent;
         public event EventHandler<EntryStreamErrorEventArgs>? EntryStreamError;
 
         public DinkurService(Entries.EntriesClient entries, Alerter.AlerterClient alerter)
         {
-            this.entries = entries;
-            this.alerter = alerter;
+            this._entries = entries;
+            this._alerter = alerter;
         }
 
         private void OnEntryStreamEvent(EntryStreamEventArgs args)
@@ -43,7 +44,7 @@ namespace Dinkur.Services
                 var lastCheck = DateTime.Now;
                 try
                 {
-                    await foreach (var ev in StreamEntries(cancellationToken))
+                    await foreach (var ev in GetEntryStream(cancellationToken))
                     {
                         OnEntryStreamEvent(new EntryStreamEventArgs(ev));
                     }
@@ -67,9 +68,17 @@ namespace Dinkur.Services
             }
         }
 
-        public async IAsyncEnumerable<EntryEvent> StreamEntries([EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async Task<List<ImmutableEntry>> GetEntryListToday(CancellationToken cancellationToken = default)
         {
-            var stream = entries.StreamEntry(new StreamEntryRequest(), cancellationToken: cancellationToken);
+            var response = await _entries.GetEntryListAsync(new GetEntryListRequest {
+                Shorthand = GetEntryListRequest.Types.Shorthand.ThisDay
+            }, cancellationToken: cancellationToken);
+            return response.Entries.Select(e => new ImmutableEntry(e)).ToList();
+        }
+
+        public async IAsyncEnumerable<EntryEvent> GetEntryStream([EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var stream = _entries.StreamEntry(new StreamEntryRequest(), cancellationToken: cancellationToken);
             await foreach (var resp in stream.ResponseStream.ReadAllAsync(cancellationToken: cancellationToken))
             {
                 if (resp == null || ConvertEventType(resp.Event) is not EventType ev)
@@ -82,12 +91,12 @@ namespace Dinkur.Services
 
         public async Task StopActiveEntry(CancellationToken cancellationToken = default)
         {
-            await entries.StopActiveEntryAsync(new StopActiveEntryRequest(), cancellationToken: cancellationToken);
+            await _entries.StopActiveEntryAsync(new StopActiveEntryRequest(), cancellationToken: cancellationToken);
         }
 
         public async Task StopEntry(ulong entryId, CancellationToken cancellationToken = default)
         {
-            await entries.UpdateEntryAsync(new UpdateEntryRequest
+            await _entries.UpdateEntryAsync(new UpdateEntryRequest
             {
                 IdOrZero = entryId,
                 End = DateTimeOffset.Now.ToTimestamp(),
@@ -96,7 +105,7 @@ namespace Dinkur.Services
 
         public async Task DeleteEntry(ulong entryId, CancellationToken cancellationToken = default)
         {
-            await entries.DeleteEntryAsync(new DeleteEntryRequest
+            await _entries.DeleteEntryAsync(new DeleteEntryRequest
             {
                 Id = entryId,
             }, cancellationToken: cancellationToken);
@@ -104,7 +113,7 @@ namespace Dinkur.Services
 
         public async Task UpdateEntry(ulong entryId, string? newName, DateTimeOffset? newStart, DateTimeOffset? newEnd, CancellationToken cancellationToken = default)
         {
-            await entries.UpdateEntryAsync(new UpdateEntryRequest
+            await _entries.UpdateEntryAsync(new UpdateEntryRequest
             {
                 IdOrZero = entryId,
                 Name = newName ?? "",
@@ -115,7 +124,7 @@ namespace Dinkur.Services
 
         public async Task<ImmutableEntry?> GetActiveEntry(CancellationToken cancellationToken = default)
         {
-            var activeEntry = (await entries.GetActiveEntryAsync(new GetActiveEntryRequest(), cancellationToken: cancellationToken)).ActiveEntry;
+            var activeEntry = (await _entries.GetActiveEntryAsync(new GetActiveEntryRequest(), cancellationToken: cancellationToken)).ActiveEntry;
             return activeEntry == null ? null : new ImmutableEntry(activeEntry);
         }
 

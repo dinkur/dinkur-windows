@@ -22,7 +22,7 @@ namespace Dinkur.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    internal sealed partial class DeleteEntryDialog : Page
+    public sealed partial class DeleteEntryDialog : Page
     {
         private readonly ImmutableEntry entry;
 

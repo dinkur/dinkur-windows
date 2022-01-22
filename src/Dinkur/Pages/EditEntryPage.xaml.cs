@@ -13,15 +13,15 @@ namespace Dinkur.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    internal sealed partial class EditEntryPage : Page
+    public sealed partial class EditEntryPage : Page
     {
-        private readonly DinkurService dinkurService = new(App.Entries, App.Alerter);
+        private readonly DinkurService dinkurService = App.Window.DinkurService;
 
         private ImmutableEntry? entry;
         public string? EntryName { get; set; }
 
-        public DateTimeOffset? entryStart;
-        public DateTimeOffset? entryEnd;
+        private DateTimeOffset? entryStart;
+        private DateTimeOffset? entryEnd;
 
         public EditEntryPage()
         {
