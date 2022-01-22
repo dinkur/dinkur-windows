@@ -176,8 +176,14 @@ namespace Dinkur
             return true;
         }
 
-        private void EntryQuickChangeBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        private async void EntryQuickChangeBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
+            if (string.IsNullOrWhiteSpace(args.QueryText))
+            {
+                return;
+            }
+            _activeEntry = await _dinkurService.StartEntry(new ImmutableEntry(0, args.QueryText, DateTimeOffset.Now, null));
+            ResetQuickChangeBoxToCurrentTask();
         }
 
         private void EntryQuickChangeBox_LostFocus(object sender, RoutedEventArgs e)
@@ -189,8 +195,8 @@ namespace Dinkur
         {
             if (args.Key == Windows.System.VirtualKey.Escape)
             {
-                // Reset field
                 ResetQuickChangeBoxToCurrentTask();
+                args.Handled = true;
             }
         }
 

@@ -68,6 +68,7 @@ namespace Dinkur.Services
             }
         }
 
+
         public async Task<List<ImmutableEntry>> GetEntryListToday(CancellationToken cancellationToken = default)
         {
             var response = await _entries.GetEntryListAsync(new GetEntryListRequest {
@@ -87,6 +88,17 @@ namespace Dinkur.Services
                 }
                 yield return new EntryEvent(new ImmutableEntry(resp.Entry), ev);
             }
+        }
+
+        public async Task<ImmutableEntry> StartEntry(ImmutableEntry entry, CancellationToken cancellationToken = default)
+        {
+            var resp = await _entries.CreateEntryAsync(new CreateEntryRequest
+            {
+                Name = entry.Name,
+                End = entry.End?.ToTimestamp(),
+                Start = entry.Start.ToTimestamp(),
+            }, cancellationToken: cancellationToken);
+            return new ImmutableEntry(resp.CreatedEntry);
         }
 
         public async Task StopActiveEntry(CancellationToken cancellationToken = default)
