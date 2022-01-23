@@ -1,6 +1,6 @@
 ﻿using System;
+using Dinkur.Models;
 using Dinkur.Services;
-using Dinkur.Types;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -17,7 +17,7 @@ namespace Dinkur.Pages
     {
         private readonly DinkurService dinkurService = App.DinkurService;
 
-        private ImmutableEntry? entry;
+        private EntryModel? entry;
         public string? EntryName { get; set; }
 
         private DateTimeOffset? entryStart;
@@ -30,7 +30,7 @@ namespace Dinkur.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            entry = (ImmutableEntry)e.Parameter;
+            entry = (EntryModel)e.Parameter;
             EntryName = entry.Name;
             entryStart = entry.Start;
             entryEnd = entry.End;

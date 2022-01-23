@@ -3,17 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Dinkur.Models;
 
 namespace Dinkur.Types
 {
-    public class SortedEntryList : IReadOnlyList<ImmutableEntry>, INotifyCollectionChanged, IList
+    public class SortedEntryList : IReadOnlyList<EntryModel>, INotifyCollectionChanged, IList
     {
         private static readonly ImmutableEntryStartComparer comparer = new();
 
-        private readonly List<ImmutableEntry> entries = new();
+        private readonly List<EntryModel> entries = new();
         private readonly HashSet<ulong> entryIds = new();
 
-        public ImmutableEntry this[int index] => entries[index];
+        public EntryModel this[int index] => entries[index];
 
         public int Count => entries.Count;
 
@@ -32,6 +34,11 @@ namespace Dinkur.Types
 
         public SortedEntryList()
         {
+        }
+
+        public SortedEntryList(IEnumerable<EntryModel> entries)
+        {
+            AddRange(entries);
         }
 
         public SortedEntryList(IEnumerable<ImmutableEntry> entries)
@@ -53,13 +60,20 @@ namespace Dinkur.Types
 
         public void AddOrUpdateById(ImmutableEntry entry)
         {
+            AddOrUpdateById(new EntryModel(entry));
+        }
+
+        public void AddOrUpdateById(EntryModel entry)
+        {
             if (entryIds.Contains(entry.Id))
             {
                 // Update
                 var idx = entries.FindIndex(t => t.Id == entry.Id);
                 var old = entries[idx];
-                entries[idx] = entry;
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, entry, old, idx));
+                old.Name = entry.Name;
+                old.Start = entry.Start;
+                old.End = entry.End;
+                // let EntryModel trigger its own PropertyChanged instead
             }
             else
             {
@@ -76,6 +90,11 @@ namespace Dinkur.Types
         }
 
         public void AddRange(IEnumerable<ImmutableEntry> entries)
+        {
+            AddRange(entries.Select(e => new EntryModel(e)));
+        }
+
+        public void AddRange(IEnumerable<EntryModel> entries)
         {
             foreach (var entry in entries)
             {
@@ -98,7 +117,7 @@ namespace Dinkur.Types
             return true;
         }
 
-        public IEnumerator<ImmutableEntry> GetEnumerator()
+        public IEnumerator<EntryModel> GetEnumerator()
         {
             return entries.GetEnumerator();
         }
@@ -115,18 +134,18 @@ namespace Dinkur.Types
 
         public bool Contains(object? value)
         {
-            if (value is not ImmutableEntry entry)
+            if (value is not EntryModel entry)
             {
-                throw new ArgumentException($"Expected {nameof(ImmutableEntry)}, but got {value?.GetType().Name??"<null>"}.", nameof(value));
+                throw new ArgumentException($"Expected {nameof(EntryModel)}, but got {value?.GetType().Name??"<null>"}.", nameof(value));
             }
             return entries.Contains(entry);
         }
 
         public int IndexOf(object? value)
         {
-            if (value is not ImmutableEntry entry)
+            if (value is not EntryModel entry)
             {
-                throw new ArgumentException($"Expected {nameof(ImmutableEntry)}, but got {value?.GetType().Name??"<null>"}.", nameof(value));
+                throw new ArgumentException($"Expected {nameof(EntryModel)}, but got {value?.GetType().Name??"<null>"}.", nameof(value));
             }
             return entries.IndexOf(entry);
         }
@@ -151,9 +170,9 @@ namespace Dinkur.Types
             ((IList)entries).CopyTo(array, index);
         }
 
-        private sealed class ImmutableEntryStartComparer : IEqualityComparer<ImmutableEntry>, IComparer<ImmutableEntry>
+        private sealed class ImmutableEntryStartComparer : IEqualityComparer<EntryModel>, IComparer<EntryModel>
         {
-            public int Compare(ImmutableEntry? x, ImmutableEntry? y)
+            public int Compare(EntryModel? x, EntryModel? y)
             {
                 return (x, y) switch
                 {
@@ -164,12 +183,12 @@ namespace Dinkur.Types
                 };
             }
 
-            public bool Equals(ImmutableEntry? x, ImmutableEntry? y)
+            public bool Equals(EntryModel? x, EntryModel? y)
             {
                 return x?.Start == y?.Start;
             }
 
-            public int GetHashCode([DisallowNull] ImmutableEntry obj)
+            public int GetHashCode([DisallowNull] EntryModel obj)
             {
                 return obj.Start.GetHashCode();
             }

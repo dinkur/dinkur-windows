@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Dinkur.Api;
+using Dinkur.Models;
 using Dinkur.Services;
 using Dinkur.Types;
-using Grpc.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -21,7 +18,7 @@ namespace Dinkur.Pages
     {
         private readonly SortedEntryList entries = new();
         private readonly DinkurService dinkurService = App.DinkurService;
-        private ImmutableEntry? entriesCommandTarget;
+        private EntryModel? entriesCommandTarget;
 
         public EntriesPage()
         {
@@ -105,7 +102,7 @@ namespace Dinkur.Pages
 
         private void EntryListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var entry = (ImmutableEntry)e.ClickedItem;
+            var entry = (EntryModel)e.ClickedItem;
             entriesCommandTarget = entry;
             EntryCommandStop.IsEnabled = entry.End == null;
             var container = (FrameworkElement)EntryListView.ContainerFromItem(entry);

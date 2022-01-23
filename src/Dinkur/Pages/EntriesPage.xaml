@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Dinkur.Pages"
-    xmlns:types="using:Dinkur.Types"
+    xmlns:models="using:Dinkur.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -48,7 +48,7 @@
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="types:ImmutableEntry">
+                <DataTemplate x:DataType="models:EntryModel">
                     <ListViewItem Padding="8">
                         <Grid VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
@@ -57,10 +57,10 @@
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="140"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{x:Bind Id}" MaxLines="1" TextTrimming="Clip"/>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Name}" Style="{ThemeResource BaseTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
-                            <TextBlock Grid.Column="2" Text="{x:Bind Start}" MaxLines="1" TextTrimming="Clip"/>
-                            <TextBlock Grid.Column="3" Text="{x:Bind End}" MaxLines="1" TextTrimming="Clip"/>
+                            <TextBlock Grid.Column="0" Text="{x:Bind Id, Mode=OneTime}" MaxLines="1" TextTrimming="Clip"/>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Name, Mode=OneWay}" Style="{ThemeResource BaseTextBlockStyle}" MaxLines="1" TextTrimming="Clip"/>
+                            <TextBlock Grid.Column="2" Text="{x:Bind Start, Mode=OneWay}" MaxLines="1" TextTrimming="Clip"/>
+                            <TextBlock Grid.Column="3" Text="{x:Bind End, Mode=OneWay}" MaxLines="1" TextTrimming="Clip"/>
                         </Grid>
                     </ListViewItem>
                 </DataTemplate>
