@@ -51,15 +51,15 @@ namespace Dinkur
                 appWindow.Changed += AppWindow_Changed;
             }
 
-            _dinkurService.EntryStreamEvent += _dinkurService_EntryStreamEvent;
+            _dinkurService.EntryStreamEvent += DinkurService_EntryStreamEvent;
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            _dinkurService.EntryStreamEvent -= _dinkurService_EntryStreamEvent;
+            _dinkurService.EntryStreamEvent -= DinkurService_EntryStreamEvent;
         }
 
-        private void _dinkurService_EntryStreamEvent(object? sender, EntryStreamEventArgs e)
+        private void DinkurService_EntryStreamEvent(object? sender, EntryStreamEventArgs e)
         {
             if (e.Entry.Id == _activeEntry?.Id
                 && (e.EventType == EventType.Deleted
@@ -79,6 +79,10 @@ namespace Dinkur
         private void OnActiveTaskChange()
         {
             StopActiveTaskButton.IsEnabled = _activeEntry != null;
+            if (EntryQuickChangeBox.FocusState == FocusState.Unfocused)
+            {
+                ResetQuickChangeBoxToCurrentTask();
+            }
         }
 
         private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args)
