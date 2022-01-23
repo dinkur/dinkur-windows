@@ -1,4 +1,4 @@
 ﻿namespace Dinkur.Types
 {
-    internal record EntryEvent(ImmutableEntry Entry, EventType EventType);
+    public record EntryEvent(ImmutableEntry Entry, EventType EventType);
 }

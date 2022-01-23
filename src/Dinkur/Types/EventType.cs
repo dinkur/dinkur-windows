@@ -1,6 +1,6 @@
 ﻿namespace Dinkur.Types
 {
-    internal enum EventType
+    public enum EventType
     {
         Created,
         Updated,

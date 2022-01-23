@@ -1,5 +1,6 @@
 ﻿using System;
 using Dinkur.Api;
+using Dinkur.Services;
 using Grpc.Net.Client;
 using Microsoft.UI.Xaml;
 
@@ -13,13 +14,20 @@ namespace Dinkur
     /// </summary>
     public partial class App : Application
     {
-        private static Window? _window;
-        private static Entries.EntriesClient? _entries;
-        private static Alerter.AlerterClient? _alerter;
+        private static MainWindow? _window;
+        internal static MainWindow Window => _window ?? throw new InvalidOperationException("Window has not yet been initialized.");
 
-        internal static Window Window => _window ?? throw new InvalidOperationException("Window has not yet been initialized.");
-        internal static Entries.EntriesClient Entries => _entries ?? throw new InvalidOperationException("Dinkur Entries service has not yet been initialized.");
-        internal static Alerter.AlerterClient Alerter => _alerter ?? throw new InvalidOperationException("Dinkur Alerter service has not yet been initialized.");
+        public static Entries.EntriesClient Entries { get; }
+        public static Alerter.AlerterClient Alerter { get; }
+        public static DinkurService DinkurService { get; }
+
+        static App()
+        {
+            var channel = GrpcChannel.ForAddress("http://localhost:59122");
+            Entries = new Entries.EntriesClient(channel);
+            Alerter = new Alerter.AlerterClient(channel);
+            DinkurService = new DinkurService(Entries, Alerter);
+        }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -28,10 +36,6 @@ namespace Dinkur
         public App()
         {
             InitializeComponent();
-
-            var channel = GrpcChannel.ForAddress("http://localhost:59122");
-            _entries = new Entries.EntriesClient(channel);
-            _alerter = new Alerter.AlerterClient(channel);
         }
 
         /// <summary>

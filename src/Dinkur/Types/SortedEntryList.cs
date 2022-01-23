@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Dinkur.Types
 {
-    internal class SortedEntryList : IReadOnlyList<ImmutableEntry>, INotifyCollectionChanged, IList
+    public class SortedEntryList : IReadOnlyList<ImmutableEntry>, INotifyCollectionChanged, IList
     {
         private static readonly ImmutableEntryStartComparer comparer = new();
 

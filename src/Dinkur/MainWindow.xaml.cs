@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Threading;
+using Dinkur.Api;
+using Dinkur.Services;
+using Grpc.Net.Client;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 
@@ -15,11 +19,23 @@ namespace Dinkur
         public static AppWindow AppWindow => _appWindow ?? throw new InvalidOperationException("App window has not yet been initialized.");
         private static AppWindow? _appWindow;
 
+        public CancellationToken CloseCancellationToken => _windowCloseCancellationSource.Token;
+
+        private readonly CancellationTokenSource _windowCloseCancellationSource = new();
+
         public MainWindow()
         {
+            _appWindow = this.GetAppWindow();
+
             InitializeComponent();
 
-            _appWindow = this.GetAppWindow();
+            Closed += MainWindow_Closed;
+            _ = App.DinkurService.StreamEntriesAsEvents(CloseCancellationToken);
+        }
+
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            _windowCloseCancellationSource.Cancel();
         }
     }
 }
