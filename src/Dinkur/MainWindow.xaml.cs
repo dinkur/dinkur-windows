@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Threading;
-using Dinkur.Api;
-using Dinkur.Services;
-using Grpc.Net.Client;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 
