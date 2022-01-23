@@ -52,6 +52,35 @@ namespace Dinkur
                 appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
                 appWindow.Changed += AppWindow_Changed;
             }
+
+            _dinkurService.EntryStreamEvent += _dinkurService_EntryStreamEvent;
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _dinkurService.EntryStreamEvent -= _dinkurService_EntryStreamEvent;
+        }
+
+        private void _dinkurService_EntryStreamEvent(object? sender, EntryStreamEventArgs e)
+        {
+            if (e.Entry.Id == _activeEntry?.Id
+                && (e.EventType == EventType.Deleted
+                    || e.Entry.End != null))
+            {
+                _activeEntry = null;
+                OnActiveTaskChange();
+                ResetQuickChangeBoxToCurrentTask();
+            }
+            else if (e.Entry.End == null)
+            {
+                _activeEntry = e.Entry;
+                OnActiveTaskChange();
+            }
+        }
+
+        private void OnActiveTaskChange()
+        {
+            StopActiveTaskButton.IsEnabled = _activeEntry != null;
         }
 
         private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args)
@@ -182,8 +211,16 @@ namespace Dinkur
             {
                 return;
             }
-            _activeEntry = await _dinkurService.StartEntry(new ImmutableEntry(0, args.QueryText, DateTimeOffset.Now, null));
-            ResetQuickChangeBoxToCurrentTask();
+            try
+            {
+                EntryQuickChangeBox.IsEnabled = false;
+                _activeEntry = await _dinkurService.StartEntry(new ImmutableEntry(0, args.QueryText, DateTimeOffset.Now, null));
+                ResetQuickChangeBoxToCurrentTask();
+            }
+            finally
+            {
+                EntryQuickChangeBox.IsEnabled = true;
+            }
         }
 
         private void EntryQuickChangeBox_LostFocus(object sender, RoutedEventArgs e)
@@ -211,18 +248,33 @@ namespace Dinkur
             try
             {
                 _activeEntry = await _dinkurService.GetActiveEntry(App.Window.CloseCancellationToken);
+                OnActiveTaskChange();
             }
             catch
             {
                 // Oh no! Swallow the error
                 // TODO: Show error somehow
                 _activeEntry = null;
+                OnActiveTaskChange();
             }
             finally
             {
                 EntryQuickChangeBox.PlaceholderText = "New…";
             }
             ResetQuickChangeBoxToCurrentTask();
+        }
+
+        private async void StopActiveTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                StopActiveTaskButton.IsEnabled = false;
+                await _dinkurService.StopActiveEntry();
+            }
+            catch
+            {
+                StopActiveTaskButton.IsEnabled = true;
+            }
         }
     }
 }

@@ -9,6 +9,7 @@
     mc:Ignorable="d"
     Padding="20"
     Loaded="Page_Loaded"
+    Unloaded="Page_Unloaded"
     >
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -49,8 +50,9 @@
             </NavigationView.AutoSuggestBox>
             <NavigationView.PaneFooter>
                 <CommandBar>
-                    <AppBarButton Label="Stop entry" Icon="Stop" Height="64" Width="40" IsEnabled="False"
-                                  IsCompact="True" ToolTipService.ToolTip="Stop active entry."/>
+                    <AppBarButton x:Name="StopActiveTaskButton" Label="Stop entry" Icon="Stop" Height="64" Width="40" IsEnabled="False"
+                                  IsCompact="True" ToolTipService.ToolTip="Stop active entry."
+                                  Click="StopActiveTaskButton_Click"/>
                 </CommandBar>
             </NavigationView.PaneFooter>
             <ScrollViewer Padding="12">

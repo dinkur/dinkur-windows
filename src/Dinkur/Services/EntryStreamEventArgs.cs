@@ -5,11 +5,13 @@ namespace Dinkur.Services
 {
     public class EntryStreamEventArgs : EventArgs
     {
-        public EntryEvent EntryEvent { get; }
+        public ImmutableEntry Entry { get; }
+        public EventType EventType { get; }
 
         public EntryStreamEventArgs(EntryEvent entryEvent)
         {
-            EntryEvent = entryEvent;
+            Entry = entryEvent.Entry;
+            EventType = entryEvent.EventType;
         }
     }
 }
